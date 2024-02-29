@@ -102,7 +102,7 @@ class AuthController extends Controller
               }
   
                Cookie::queue( Cookie::forget('distributor'));
-              $country_code = $_COOKIE['country_code'];
+              
               $userId = $user_respose['CustomerId'];
               $userEmail = $user_respose['EmailAddress'];
               
