@@ -1,0 +1,320 @@
+*{margin:0; padding:0;box-sizing: border-box;}
+.define_float{float:left; width:100%;}
+h1,h2,h3,h4,h5,h6,p,a,ul, ol{margin:0; padding:0;}
+ul, li, a{list-style-type:none; text-decoration:none;}
+body,html{font-family: 'Futura';scroll-behavior: smooth;}
+body .no_pad{padding:0;}
+a:hover{text-decoration:none;}
+a:focus,button:focus{outline:none;}
+img{max-width:100%;}
+.no_pad{padding:0;}
+a, button{transition:ease all 0.4s; -webkit-transition:ease all 0.4s; -moz-transition:ease all 0.4s; -o-transition:ease all 0.4s;}
+
+@font-face {
+    font-family: 'Futura Bk BT';
+    src: url('../fonts/FuturaBT-Book.eot');
+    src: url('../fonts/FuturaBT-Book.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FuturaBT-Book.woff2') format('woff2'),
+        url('../fonts/FuturaBT-Book.woff') format('woff'),
+        url('../fonts/FuturaBT-Book.ttf') format('truetype'),
+        url('../fonts/FuturaBT-Book.svg#FuturaBT-Book') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Futura Lt BT';
+    src: url('../fonts/FuturaBT-Light.eot');
+    src: url('../fonts/FuturaBT-Light.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FuturaBT-Light.woff2') format('woff2'),
+        url('../fonts/FuturaBT-Light.woff') format('woff'),
+        url('../fonts/FuturaBT-Light.ttf') format('truetype'),
+        url('../fonts/FuturaBT-Light.svg#FuturaBT-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Futura PT';
+    src: url('../fonts/FuturaPT-Light.eot');
+    src: url('../fonts/FuturaPT-Light.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FuturaPT-Light.woff2') format('woff2'),
+        url('../fonts/FuturaPT-Light.woff') format('woff'),
+        url('../fonts/FuturaPT-Light.ttf') format('truetype'),
+        url('../fonts/FuturaPT-Light.svg#FuturaPT-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Futura XBlk BT';
+    src: url('../fonts/FuturaBT-ExtraBlack.eot');
+    src: url('../fonts/FuturaBT-ExtraBlack.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/FuturaBT-ExtraBlack.woff2') format('woff2'),
+        url('../fonts/FuturaBT-ExtraBlack.woff') format('woff'),
+        url('../fonts/FuturaBT-ExtraBlack.ttf') format('truetype'),
+        url('../fonts/FuturaBT-ExtraBlack.svg#FuturaBT-ExtraBlack') format('svg');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura';
+    src: url('../fonts/Futura.eot');
+    src: url('../fonts/Futura.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Futura.woff2') format('woff2'),
+        url('../fonts/Futura.woff') format('woff'),
+        url('../fonts/Futura.ttf') format('truetype'),
+        url('../fonts/Futura.svg#Futura') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Futura';
+    src: url('../fonts/Futura-Medium.eot');
+    src: url('../fonts/Futura-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Futura-Medium.woff2') format('woff2'),
+        url('../fonts/Futura-Medium.woff') format('woff'),
+        url('../fonts/Futura-Medium.ttf') format('truetype'),
+        url('../fonts/Futura-Medium.svg#Futura') format('svg');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Generica';
+    src: url('../fonts/Generica.eot');
+    src: url('../fonts/Generica.eot?#iefix') format('embedded-opentype'), 
+        url('../fonts/Generica.woff2') format('woff2'),
+        url('../fonts/Generica.woff') format('woff'),
+        url('../fonts/Generica.ttf') format('truetype'),
+        url('../fonts/Generica.svg#Generica') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Generica';
+    src: url('../fonts/Generica-Bold.eot');
+    src: url('../fonts/Generica-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Generica-Bold.woff2') format('woff2'),
+        url('../fonts/Generica-Bold.woff') format('woff'),
+        url('../fonts/Generica-Bold.ttf') format('truetype'),
+        url('../fonts/Generica-Bold.svg#Generica-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Questrial';
+    src: url('../fonts/Questrial-Regular.eot');
+    src: url('../fonts/Questrial-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Questrial-Regular.woff2') format('woff2'),
+        url('../fonts/Questrial-Regular.woff') format('woff'),
+        url('../fonts/Questrial-Regular.ttf') format('truetype'),
+        url('../fonts/Questrial-Regular.svg#Questrial-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Circe';
+    src: url('../fonts/Circe-Regular.eot');
+    src: url('../fonts/Circe-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/Circe-Regular.woff2') format('woff2'),
+        url('../fonts/Circe-Regular.woff') format('woff'),
+        url('../fonts/Circe-Regular.ttf') format('truetype'),
+        url('../fonts/Circe-Regular.svg#Circe-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+   
+@media (min-width:1200px) {
+	.quick_checkoutMain .container{max-width:1170px}
+}
+
+@media (min-width:1400px) {
+	.quick_checkoutMain .container{max-width:1350px}
+}
+@media (min-width:1600px) {
+	.quick_checkoutMain .container{max-width:1550px}
+}
+
+
+/*==================== Quick Checkout Page CSS Start Here ====================*/
+.quick_checkoutMain { position: relative; padding: 31px 0 92px; }
+.quick_checkoutMain::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: calc(100% - 140px); background: linear-gradient(180deg, #F0FAFB 0%, rgba(240, 250, 251, 0.00) 100%); }
+.chk_tdInner { display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; -webkit-box-align: flex-start; -moz-box-align: flex-start; -webkit-align-items: flex-start; -ms-flex-align: flex-start; align-items: flex-start; -webkit-box-pack: justify; -moz-box-pack: justify; -webkit-justify-content: space-between; -ms-flex-pack: justify; justify-content: space-between; gap: 20px; }
+.prdt_titleleft ul.instock_list {display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex;float: left;width: 100%;-webkit-box-align: center; -moz-box-align: center; -webkit-align-items: center; -ms-flex-align: center; align-items: center;}
+.prdt_titleleft h5 { color: #1F263C; font-family: "Futura"; font-size: 24px; font-style: normal; font-weight: 400; line-height: 100%; letter-spacing: -0.72px; text-transform: uppercase; float: left; width: 100%; margin: 0 0 16px; } 
+.prdt_titleleft ul.instock_list li { color: #A0A0A0; font-family: Questrial; font-size: 18px; font-style: normal; font-weight: 400; line-height: 100%; position: relative; border-right: 1px solid #D6D6D6; padding: 0 12px 0 0; margin: 0 12px 0 0; } 
+.prdt_titleleft ul.instock_list li.in_stockGreen { color: #00A96C; } 
+.prdt_titleleft ul.instock_list li:last-child { padding: 0; margin: 0; border: none; }
+.prdt_priceRight span { color: #1F263C; text-align: right; font-family: "Futura"; font-size: 24px; font-style: normal; font-weight: 400; line-height: 100%;letter-spacing: -0.72px; text-transform: uppercase; } 
+.quick_subtotalBox { float: left; width: 736px; border-radius: 24px; background: #fff; box-shadow: 0px 72px 124px 0px rgba(19, 73, 77, 0.20); overflow: hidden; padding: 47px 36px; }
+.ckkout_prdtData { width: 100%; }
+.bag_includePrdt p { color: #A0A0A0; font-family: Questrial; font-size: 20px; font-style: normal; font-weight: 400; line-height: 100%; float: left; width: 100%; margin: 0} 
+.bag_includePrdt p span { color: #1F263C; }
+.chk_prdtLeft {width: 164px; } 
+.chk_prdtright { width: calc(100% - 164px); padding-left: 24px !important; }
+.prdt_img img { width: 100%; border-radius: 4px; border: 1px solid #EAEAEA; }
+.ckkout_prdtData tr { border-top: 1px solid #EAEAEA; } 
+.ckkout_prdtData tr td { padding: 18px 0; } 
+.bag_includePrdt { margin: 0 0 18px; float: left; width: 100%; }
+.ckkout_prdtData tr:last-child { border-bottom: 1px solid #EAEAEA; }
+.quick_headerLogo { float: left; width: 100%; margin: 0 0 56px; }
+.subTotal_Data { width: 100%; margin: 30px 0 0;}
+.Total_quickprice { text-align: right; }
+.subTotal_Data tr { margin: 0 0 24px; display: table; width: 100%; } 
+.subTotal_Data tr:last-child { margin: 0px 0 30px; } 
+.subTitle_prdtLeft span { color: #A0A0A0; font-family: Questrial; font-size: 20px; font-style: normal; font-weight: 400; line-height: 100%; } 
+.Total_quickprice span { color: #1F263C; text-align: right; font-family: "Futura"; font-size: 24px; font-style: normal; font-weight: 400; line-height: 100%; letter-spacing: -0.72px; text-transform: uppercase; }
+.subTotal_Data tfoot tr { margin: 0px !important; } 
+.subTotal_Data tfoot { border-top: 1px solid #EAEAEA; } 
+.subTotal_Data tfoot tr:first-child { margin-top: 30px !important; }
+.total_tfLeft span { color: #A0A0A0; font-family: Questrial; font-size: 24px; font-style: normal; font-weight: 400; line-height: 100%; } 
+.total_tfRight span { color: #3BA3AC; text-align: right; font-family: "Futura"; font-size: 32px; font-style: normal; font-weight: 400; line-height: 100%; letter-spacing: -0.96px; text-transform: uppercase; }
+.quick_ctFlex { display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex; gap: 134px; }
+.quick_ckoutLogin { width: calc(100% - 870px); margin: 110px 0 0; } 
+.quick_ckoutLogin h3 { text-align: center; color: #1F263C; font-family: "Futura"; font-size: 48px; font-style: normal; font-weight: 400; line-height: 67px; letter-spacing: -2.4px; text-transform: uppercase; float: left; width: 100%; margin: 0 0 48px; }
+.quick_ckoutLogin .form_outer { float: none; width: 100%; max-width: 564px; margin: 0 auto; display: flex; justify-content: center; } 
+.quick_ckoutLogin .form_outer .input-group{position:relative;margin:0 0 24px;} 
+.quick_ckoutLogin .form_outer .input-group input { border-radius: 8px !important; border: 1px solid #D6D6D6; width: 100%; max-width: 100%; background: #ffffff; padding: 16px 40px 16px 74px; font-family: 'Questrial'; font-weight: 400; font-size: 18px; line-height: 31px; color: #1F263C; outline: 0; height: auto; } 
+.quick_ckoutLogin .form_outer form { width: 100%; } 
+.quick_ckoutLogin .form_outer .input-group .error { position: absolute; bottom: -20px; text-align: left; color: #d00; width: 100%; border-radius: 20px; line-height: 18px; left: 0; font-family: 'Questrial'; font-style: normal; font-weight: 400; font-size: 13px; } 
+.quick_ckoutLogin .form_outer .input-group::before { content: ''; width: 20px; height: 20px; position: absolute; top: 22px; left: 20px; background-size: contain !important; background-repeat: no-repeat !important; background-position: center !important; z-index: 1; } 
+.quick_ckoutLogin .form_outer .input-group#chk-admin::before { background: url('../images/form_user.svg'); } 
+.quick_ckoutLogin .form_outer .input-group#chk-pass::before { background: url('../images/password.svg');z-index: 9; } 
+.quick_ckoutLogin .form_outer .input-group::after { content: ''; height: 30px; width: 1px; background: #D6D6D6; position: absolute; top: 18px; left: 59px;z-index: 9; }
+.quick_ckoutLogin .form_outer .input-group input:focus { outline: none; box-shadow: none; }
+
+.quick_ckoutLogin .form_outer .input-group.chk-forgot { justify-content: flex-end; margin: -19px 0 32px; } 
+.quick_ckoutLogin .form_outer .input-group.chk-forgot a { color: #A0A0A0; text-align: right; font-family: Questrial; font-size: 16px; font-style: normal; font-weight: 400; line-height: 24px; margin: 0; transition: 0.4s ease all; } 
+.quick_ckoutLogin .form_outer .input-group.chk-forgot a.forgotpslink:hover { color: #3ba3ac; } 
+.quick_ckoutLogin .form_outer .input-group .component_chk { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); height: 100%; display: flex; align-items: center; z-index: 9; } 
+.quick_ckoutLogin .form_outer .input-group .component_chk img { margin: 0; cursor: pointer; }
+.quick_ckoutLogin .form_outer .input-group.chk-forgot::after { content: unset; }
+.submitbtn_chk button { border-radius: 4px; background: linear-gradient(90deg, #26255E 0%, #6BCAD2 100%); width: 100%; border: none; transition: 0.4s ease all; padding: 20px 25px; color: #fff; text-align: center; font-family: Questrial; font-size: 18px; font-style: normal; font-weight: 400; line-height: 25px; letter-spacing: 0.54px; text-transform: uppercase; } 
+.submitbtn_chk button:hover { background: linear-gradient(90deg, #6BCAD2 0%, #26255E 100%); }
+
+/* Media Queries Start Here */
+@media (max-width:1600px){
+	.quick_ctFlex { gap: 64px; }
+	.quick_ckoutLogin { width: calc(100% - 800px); }
+	.quick_ckoutLogin h3 { font-size: 40px; line-height: 50px; margin: 0 0 35px; }
+	.total_tfRight span { font-size: 28px; }
+	.Total_quickprice span { font-size: 20px; }
+	.prdt_titleleft h5 { font-size: 20px; margin: 0 0 15px; } 
+	.prdt_priceRight span { font-size: 20px; }
+	.subTotal_Data tr { margin: 0 0 20px; }
+	.subTotal_Data tfoot tr:first-child { margin-top: 20px !important; } 
+	.subTotal_Data tr:last-child { margin: 0px 0 20px; } 
+	.subTotal_Data { width: 100%; margin: 20px 0 0; }
+	.quick_subtotalBox { box-shadow: 0px 40px 80px 0px rgba(19, 73, 77, 0.20); padding: 40px 30px; }
+}
+
+@media (max-width:1400px){
+	.quick_subtotalBox { width: 650px; }
+	.quick_ctFlex { gap: 30px; }
+	.quick_ckoutLogin { width: calc(100% - 680px);margin: 80px 0 0; }
+	.chk_prdtLeft { width: 130px; } 
+	.chk_prdtright { width: calc(100% - 130px); padding-left: 15px !important; }
+	.quick_headerLogo { margin: 0 0 40px; }
+	.quick_ckoutLogin h3 { font-size: 36px; line-height: 44px; margin: 0 0 25px; }
+	.quick_headerLogo a img { width: 200px; }
+	.quick_ckoutLogin .form_outer .input-group input { padding: 14px 40px 14px 74px; font-size: 16px; line-height: 28px; }
+	.quick_ckoutLogin .form_outer .input-group::after { top: 14px; }
+	.quick_ckoutLogin .form_outer .input-group::before { top: 19px; }
+	.quick_ckoutLogin .form_outer .input-group .component_chk img { margin: 0; cursor: pointer; width: 20px; }
+	.submitbtn_chk button { padding: 17px 25px; font-size: 16px; line-height: 24px; } 
+	.quick_ckoutLogin .form_outer .input-group.chk-forgot { justify-content: flex-end; margin: -19px 0 20px; }
+}
+
+@media (max-width:1199px){
+	.quick_checkoutMain .container { max-width: 95%; }
+	.quick_ckoutLogin { width: calc(100% - 580px); margin: 80px 0 0; } 
+	.quick_subtotalBox { width: 550px; } 
+	.quick_subtotalBox { box-shadow: 0px 30px 60px 0px rgba(19, 73, 77, 0.20); padding: 30px; } 
+	.chk_prdtLeft { width: 100px; } 
+	.chk_prdtright { width: calc(100% - 100px); padding-left: 15px !important; } 
+	.prdt_titleleft h5 { font-size: 18px; margin: 0 0 10px; } 
+	.prdt_titleleft ul.instock_list li { font-size: 16px; padding: 0 7px 0 0; margin: 0 7px 0 0; } 
+	.prdt_priceRight span { font-size: 18px; } 
+	.subTitle_prdtLeft span { font-size: 18px; } 
+	.Total_quickprice span { font-size: 18px; } 
+	.quick_ckoutLogin h3 { font-size: 32px; line-height: 40px; margin: 0 0 20px; }
+}
+
+@media (max-width:991px){
+	.quick_ctFlex { gap: 30px; flex-direction: column-reverse; }
+	.quick_subtotalBox { width: 100%; border-radius: 15px;margin:0 auto; }
+	.quick_ckoutLogin { width: 100%; margin: 0 auto;; }
+	.quick_checkoutMain .container { max-width: 100%; }
+	.quick_ckoutLogin .form_outer { max-width: 100%; }
+}
+
+@media (max-width:767px){
+	.bag_includePrdt p { font-size: 18px; }
+	.chk_prdtLeft { width: 80px; } .ckkout_prdtData tr td { padding: 10px 0; } 
+	.chk_prdtright { width: calc(100% - 80px); padding-left: 10px !important; } 
+	.prdt_titleleft h5 { font-size: 16px; margin: 0 0 10px; } 
+	.total_tfLeft span { font-size: 20px; } 
+	.total_tfRight span { font-size: 24px; } 
+	.subTotal_Data tr { margin: 0 0 15px; } 
+	.subTotal_Data { width: 100%; margin: 15px 0 0; } 
+	.subTotal_Data tr { margin: 0 0 10px; } 
+	.subTotal_Data tr:last-child { margin: 0px 0 10px; } 
+	.subTotal_Data tfoot tr:first-child { margin-top: 10px !important; } 
+	.quick_subtotalBox { box-shadow: 0px 20px 40px 0px rgba(19, 73, 77, 0.20); padding: 20px; border-radius: 10px; } 
+	.quick_headerLogo a img { width: 170px; } .quick_ckoutLogin h3 { font-size: 28px; line-height: 36px; margin: 0 0 15px; } 
+	.quick_ckoutLogin .form_outer .input-group input { padding: 12px 40px 12px 50px; font-size: 16px; line-height: 28px; } 
+	.quick_ckoutLogin .form_outer .input-group::after { top: 12px; left: 40px; } 
+	.quick_ckoutLogin .form_outer .input-group::before { top: 17px; left: 10px; } 
+	.quick_ckoutLogin .form_outer .input-group .component_chk { right: 10px; }
+	.submitbtn_chk button { padding: 15px 20px; font-size: 16px; line-height: 24px; }
+	.quick_checkoutMain { position: relative; padding: 30px 0 70px; }
+	.bag_includePrdt {margin: 0 0 10px; }
+	.quick_ckoutLogin .form_outer .input-group.chk-forgot a { font-size: 14px; line-height: 20px; }
+}
+
+@media (max-width:480px){
+	.quick_ckoutLogin h3 { font-size: 24px; line-height: 30px; margin: 0 0 15px; letter-spacing: 0; }
+	.prdt_priceRight span { font-size: 16px; }
+	.chk_prdtLeft { width: 60px; } 
+	.chk_prdtright { width: calc(100% - 60px); padding-left: 10px !important; } 
+	.prdt_titleleft h5 { font-size: 14px; margin: 0 0 10px; } 
+	.prdt_titleleft ul.instock_list li { font-size: 14px; padding: 0 5px 0 0; margin: 0 5px 0 0; } 
+	.bag_includePrdt p { font-size: 16px; } 
+	.subTitle_prdtLeft span { font-size: 16px; } 
+	.Total_quickprice span { font-size: 16px; } 
+	.Total_quickprice span { font-size: 16px; } 
+	.total_tfRight span { font-size: 20px; } 
+	.subTotal_Data { margin: 10px 0 0; }
+	.quick_headerLogo { margin: 0 0 30px; } 
+	.quick_headerLogo a img { width: 150px; }
+}
+
+@media (max-width:370px){
+	.chk_tdInner { gap:10px; flex-direction: column; }
+	.quick_ckoutLogin h3 { font-size: 22px; line-height: 28px; margin: 0 0 10px; letter-spacing: 0; } 
+	.prdt_priceRight span { font-size: 14px; } 
+	.prdt_titleleft h5 { font-size: 14px; margin: 0 0 10px; letter-spacing: 0; } 
+	.Total_quickprice span { font-size: 14px; letter-spacing: 0; } 
+	.subTitle_prdtLeft span { font-size: 14px; } 
+	.total_tfRight span,.total_tfLeft span { font-size: 18px; }
+}
+/* Media Queries End Here */
+
+/*==================== Quick Checkout Page CSS End Here ====================*/

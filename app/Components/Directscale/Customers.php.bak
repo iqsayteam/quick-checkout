@@ -1,0 +1,279 @@
+<?php
+
+namespace App\Components\Directscale;
+
+use App\Components\Api\Directscale;
+
+class Customers extends Directscale{
+
+    protected $uri = "customers";
+
+
+
+
+    /**
+     * Search distributor Caller it calls the GET request to DS to get the distributor information
+     * @param $keyword | string | integer | BackOfficeId | Email Address
+     * @return array
+    */
+    public function search_distributor($keyword){
+        $response = $this->makeRequestLiveAPI("{$this->uri}/search/".$keyword, "GET");
+		return $this->formatResponse($response);
+    }
+	
+    public function get_customer_by_email($keyword){
+        $response = $this->makeRequestLiveAPI("{$this->uri}/?email=".$keyword, "GET");
+		return $this->formatResponse($response);
+    }
+
+    /**
+     * @param $webalias | string | integer | Webalias
+     * @return array
+    */
+    public function get_distributor_by_webalias($webalias){
+        $response = $this->makeRequest("{$this->uri}/websiteInfo2?webAlias=".$webalias, "GET");
+        return $this->formatResponse($response);
+    }
+    /**
+     * @param $webalias | string | integer | Webalias
+     * @return array
+     */
+    public function get_distributor_by_webalias_active($webalias)
+    {
+        $response = $this->makeRequest("{$this->uri}/websiteInfo2?webAlias=" . $webalias, "GET");
+
+        $data = json_decode($response->getBody()->getContents(), true);
+        if (isset($data['CustomerId'])) {
+            $response2 = $this->makeRequest("{$this->uri}/" . $data['CustomerId'], "GET");
+            $Associate = json_decode($response2->getBody()->getContents(), true);
+            if ($Associate['CustomerStatus'] == 1 && ($Associate['CustomerType'] == 1 or $Associate['CustomerType'] == 2)) {
+
+                return $data;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+
+    }
+        /**
+     * @param array  user_details| string | integer | Webalias
+     * @param array  user_details| string | integer | Webalias
+     * @return user_id | integer
+    */
+    public function create_customer($userdata){
+        $response = $this->makeRequest("{$this->uri}", "POST", $userdata);
+        return $this->formatResponse($response);
+    }
+
+     /**
+     * @param  user_id|integer
+     * @return user details array| object
+    */
+    public function update_customer($user_id, $userdata){
+        $response = $this->makeRequest("{$this->uri}/".$user_id, "PUT", $userdata);
+        return $this->formatResponse($response);
+    }
+
+    /**
+     * @param  user_id|integer
+     * @return user details array| object
+    */
+    public function update_webalias($user_id, $webalias_data){
+        $response = $this->makeRequest("{$this->uri}/".$user_id, "PATCH", $webalias_data);
+        return $this->formatResponse($response);
+    }
+
+    /**
+     * This function reset the user password in 4th step of enrollment, where user provides his webalias and password,
+     * @param  [int] $user_id
+     * @param  [string] $new_password
+     */
+    public function reset_password($user_id, $new_password){
+        $response = $this->makeRequest("{$this->uri}/".$user_id."/reset-password", "PUT", $new_password);
+        return $this->formatResponse($response);
+    }
+
+     /**
+     * @param  user_id|integer
+     * @return user details array| object
+    */
+    public function update_customer_by_parameter($user_id, $userdata){
+        $response = $this->makeRequest("{$this->uri}/".$user_id, "PATCH", $userdata);
+        return $this->formatResponse($response);
+    }
+
+    /**
+     * @param  user_id|integer
+     * @param array  cart_details| array object
+     * @return Order details array| object
+    */
+    public function calculate_customer_order_total($user_id, $userdata){
+        $response = $this->makeRequest("{$this->uri}/".$user_id."/orders/calculate", "POST", $userdata);
+        return $this->formatResponse($response);
+    }
+
+      /**
+     * @param  user_id|integer
+     * @return user details array| object
+    */
+    public function get_customer_by_id($user_id){
+        $response = $this->makeRequest("{$this->uri}/".$user_id, "GET");
+        return $this->formatResponse($response);
+    }
+
+      /**
+     * fetching Payment Iframe code from Directscale API by using Ifrme required data like
+     * if required parametor is not correct return false
+     * @param $customer_id | integer
+     * @param  $iframe_id|integer
+     * @param  $store_id|integer
+     * @param  $region_id|integer
+     * @param  $language_code|string
+     * @param  $country_code|string
+     * @return Iframe array| object
+    */
+    public function get_payment_iframe($customer_id, $iframe_id, $store_id, $region_id, $language_code, $country_code)
+    {
+        $response = $this->makeRequestLiveAPI("{$this->uri}/".$customer_id."/paymentmethods/iframe?iframeid=".$iframe_id."&storeid=".$store_id."&countrycode=".$country_code."&region=".$region_id."&languagecode=".$language_code, "GET");
+        return $this->formatResponse($response);
+    }
+
+    /**
+     * Create customer order basis on the customer cart data and user
+     * details like shipping details as well as payment details if all
+     * required param is correct return user with their Order ID and other order details.
+     * @param  $customer_id|integer
+     * @param request order parametor | json object
+     * @return $user details array| object
+    */
+    public function create_customer_order($customer_id, $orderdata){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/orders", "POST", $orderdata);
+        return $this->formatResponse($response);
+    }
+
+     /**
+     * Create customer autoship order basis on the customer cart data and user
+     * details like shipping details as well as payment details if all
+     * required param is correct return user with their Order ID and other order details.
+     * @param  $customer_id|integer
+     * @param request order parametor | json object
+     * @return $user details array| object
+    */
+    public function create_customer_autoship_order($customer_id, $orderdata){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/autoship", "POST", $orderdata);
+        return $this->formatResponse($response);
+    }
+
+    public function getBillingMethods($customer_id, $storeId){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/paymentmethods/?storeid=".$storeId, "GET");
+        return $this->formatResponse($response);
+    }
+
+	public function userLogin($userCredential=null)
+	{
+		$response = $this->makeRequest("validate/login", "POST", $userCredential);
+		return $this->formatResponse($response);
+	}
+
+	public function ssoLink($customerId=null)
+	{
+		$response = $this->makeRequest("sso/".$customerId, "GET");
+		return $this->formatResponse($response);
+	}
+	
+	public function get_customer_orders($userId)
+    {
+        $response = $this->makeRequest("{$this->uri}/".$userId."/orders", "GET");
+        return $this->formatResponse($response);   
+    }
+	
+	public function get_customer_services($customer_id){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/services", "GET");
+        return $this->formatResponse($response);
+    }
+	
+	public function get_customer_autoships($customer_id){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/autoships?includeServiceAutoships=true&includeActiveAutoships=true&includeCanceledAutoships=false", "GET");
+        return $this->formatResponse($response);
+    }
+	
+	public function get_customer_old_autoships($customer_id){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/autoships?includeServiceAutoships=true&includeActiveAutoships=false&includeCanceledAutoships=true", "GET");
+        return $this->formatResponse($response);
+    }
+	
+
+	public function pause_subscription($subscriptionId, $data){
+        $response = $this->makeRequest("{$this->uri}/autoship/".$subscriptionId, "PUT", $data);
+        return $this->formatResponse($response);
+    }
+
+    public function deletePaymentMethod($customerID, $paymentmethodID, $merchantID)
+    {
+        $response = $this->makeRequest("{$this->uri}/".$customerID."/paymentmethods/".$paymentmethodID."?merchantid=".$merchantID, "DELETE    ");
+        return $this->formatResponse($response); 
+    }
+
+    // public function create_payment_method($customerid,$orderdata){ 
+    //     $response = $this->makeRequest("{$this->uri}/".$customerid."/paymentmethods/", "POST", $orderdata);
+    //     return $this->formatResponse($response);
+    // }
+
+    public function get_customer_merchants($customer_id,$storeid,$countrycode){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/merchants?storeid=true&countrycode=true", "GET");
+        return $this->formatResponse($response);
+     } 
+
+     public function get_payment_merchants($customer_id, $store_id, $country_code)
+     {
+         $response = $this->makeRequest("{$this->uri}/".$customer_id."/merchants?storeid=".$store_id."&countrycode=".$country_code, "GET");
+         return $this->formatResponse($response);
+     }
+
+     public function save_payment_method($customer_id, $card_info)
+     {
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/paymentmethods", "POST", $card_info);
+        return $this->formatResponse($response);
+     }
+
+     public function get_customer_custom_fields($customer_id)
+     {
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/customFields");
+        return $this->formatResponse($response);
+     }
+
+     public function get_customer_data_point($postdata)
+     { 
+        $response = $this->makeRequest("{$this->uri}/customers-datapoints", "POST", $postdata);
+        return $this->formatResponse($response);
+     }
+
+
+     public function get_customer_all_autoships($customer_id){
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/autoships?includeServiceAutoships=true&includeActiveAutoships=true", "GET");
+        return $this->formatResponse($response);
+    }
+
+	 /**
+     * Created By: Raju
+     * Created on: 31-jan-2023
+     * Last Updated By: Raju
+     * Last Updated on: 31-jan-2023
+     * This function is used to find the vb kit of current user.
+     * @param mixed $customer_id
+     * 
+     * @return [ARRAY]
+    */
+    public function get_vb_kit($customer_id)
+    {
+     
+        $response = $this->makeRequest("{$this->uri}/".$customer_id."/services", "GET");
+        return $this->formatResponse($response);   
+    }
+
+     
+	
+
+}
