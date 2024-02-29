@@ -187,8 +187,11 @@ public function isValidBase64($encodedString) {
             $response = new Response();
             $response->cookie('country_code', $user_respose['PrimaryAddress']['CountryCode'] ); // 'country_code' is the name of the cookie
             $response->cookie('language_code', $user_respose['LanguageCode'] ); // 'language_code' is the name of the cookie
-        
-            $user_respose['currency_code'] = get_currency($user_respose['PrimaryAddress']['CountryCode']);  
+            $user_respose['currency_code'] = Http::get(env('nvisionu')."/api/get_currency",$user_respose['PrimaryAddress']['CountryCode'] ); 
+            $user_respose['currency_symbol'] = $user_respose['currency_code']['currency_symbol'];
+            $user_respose['currency_code'] = $user_respose['currency_code']['currency_code'];
+ 
+            // $user_respose['currency_code'] = get_currency();  
                 foreach($explodeitems as $items)
                 {  
                     // $response = $this->getDirectProductbyId($items,$user_respose['PrimaryAddress']['CountryCode'],$user_respose['LanguageCode'],$price_group); 

@@ -1010,8 +1010,7 @@ function check_customer_have_live_stream(){
 function get_currency($countryCode=""){
 	if($countryCode == "") {
 		$countryCode = get_current_country_code();
-	}
-
+	} 
     if($countryCode){
         $currencyCode = Country::Where('country_code', $countryCode)->first();
         if(isset($currencyCode->currency_code))

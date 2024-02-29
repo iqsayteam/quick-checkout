@@ -51,7 +51,7 @@
 												<div class="prdt_titleleft">
 													<h5>{{$productdata['regular_product_details']['product_name']}}</h5>
 													<ul class="instock_list">
-														<li>{{getCountrySymbol($user_respose['currency_code']).''.$price}}</li>
+														<li>{{$user_respose['currency_symbol'].''.$price}}</li>
 														<li>x1</li>
                                                         
                                                        @if($productdata['regular_product_details']['stock'] == 0)
@@ -64,9 +64,9 @@
 												</div>
 												<div class="prdt_priceRight">
                                                 @if($productdata['regular_product_details']['stock'] == 0)
-                                                <span>{{getCountrySymbol($user_respose['currency_code']).'0'}}</span>
+                                                <span>{{$user_respose['currency_symbol'].'0'}}</span>
                                                        @else
-                                                       <span>{{getCountrySymbol($user_respose['currency_code']).''.$price}}</span>
+                                                       <span>{{$user_respose['currency_symbol'].''.$price}}</span>
                                                        @endif
 												
 												</div>
@@ -83,7 +83,7 @@
 												<span>Subtotal:</span>
 											</td>
 											<td class="Total_quickprice" align="right">
-												<span>  {{getCountrySymbol($user_respose['currency_code']).''.$subtotal}}</span>
+												<span>  {{$user_respose['currency_symbol'].''.$subtotal}}</span>
 											</td>
 										</tr>
 									 
@@ -94,7 +94,7 @@
 												<span>Total:</span>
 											</td>
 											<td class="total_tfRight" align="right">
-											<span>  {{getCountrySymbol($user_respose['currency_code']).''.$subtotal}}</span>
+											<span>  {{$user_respose['currency_symbol'].''.$subtotal}}</span>
 											</td>
 										</tr>
 									</tfoot>
