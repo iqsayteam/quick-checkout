@@ -139,11 +139,11 @@ class CheckoutController extends Controller
                         'status' =>1, 
                         ]
                     );
-                 
+                 $url[] = url('login/'.$encryptedData);
             }
              
         } 
-        return ['status'=>'success', 'message'=>'Unique links created'];
+        return ['status'=>'success', 'message'=>'Unique links created','response'=>$url];
     }
   
 /**
