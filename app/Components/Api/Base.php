@@ -12,6 +12,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Psr7\Message;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\RequestException;
 use Session;
 class Base {
 
@@ -255,4 +257,6 @@ class Base {
     {
       $this->http_client = new Client(['base_uri' => $this->checkout_base_url]);
     }
+
+     
 }

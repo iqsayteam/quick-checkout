@@ -191,7 +191,12 @@ public function isValidBase64($encodedString) {
             $user_respose['currency_code'] = get_currency($user_respose['PrimaryAddress']['CountryCode']);  
                 foreach($explodeitems as $items)
                 {  
-                    $response = $this->getDirectProductbyId($items,$user_respose['PrimaryAddress']['CountryCode'],$user_respose['LanguageCode'],$price_group); 
+                    // $response = $this->getDirectProductbyId($items,$user_respose['PrimaryAddress']['CountryCode'],$user_respose['LanguageCode'],$price_group); 
+                    $datatosend = ['items'=>$items,'CountryCode'=>$user_respose['PrimaryAddress']['CountryCode'],'LanguageCode'=>$user_respose['LanguageCode'],'price_group'=>$price_group];
+                $response = Http::post(env('nvisionu')."/api/getdirectproductbyid",$datatosend);   
+              
+                $response =json_decode($response,true);
+              
                     if($response['productFoundForSelectedLocation'] && $response['regular_product_details']['status'] && $response['regular_product_details']['stock'] && $response['regular_product_details']['stock']  && $response['regular_product_details']['disabled'] == 0)
                     { 
                         $products[] =$response ; 

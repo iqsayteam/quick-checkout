@@ -247,5 +247,5 @@ class CustomApi extends Directscale{
     //     $curlResult = $this->callCurl($this->getUnplacedUserListApiUrl,$header,$rowData);
     //     return $curlResult;
     // }
-
+ 
 }

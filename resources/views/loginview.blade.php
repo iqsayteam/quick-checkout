@@ -151,13 +151,21 @@
 		<script src="{{asset('quick-checkout/js/bootstrap.min.js')}}"></script>
 		<!-- Scripts End Here -->
 		<script>
-			$(document).ready(function()
-			{
-				$("#chk_show-password").click(function(){
+		$(document).ready(function() {
+			$("#chk_show-password").click(function() {
+        var passwordField = $("#chk_password");
+		passwordField.attr("type", 'text');
+			$("#chk_hide-password").show()
+			$("#chk_show-password").hide()
+    });
+	$("#chk_hide-password").click(function() {
+        var passwordField = $("#chk_password");
+		passwordField.attr("type", 'password');
+			$("#chk_hide-password").hide()
+			$("#chk_show-password").show()
+    });
+});
 
-				})
-
-			})
 		</script>
 	</body>
 </html>

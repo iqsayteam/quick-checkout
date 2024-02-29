@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Components\Directscale\SSO as SSOComponent;
+use App\Components\Directscale\CustomApi ;
 use App\Components\Directscale\Customers as CustomerComponent;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
@@ -15,11 +16,15 @@ use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\ProductController;
 use App\Models\CustomField;
 use App\Models\Product; 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\RequestException;
 use App\Components\CurlApi\Normalcurl;
 
 class AuthController extends Controller
 {
-    protected $customer_API; 
+  protected $customer_API; 
+  protected $Custom_API; 
+    
     protected $SSO_API;  
     protected $ProductController;  
     protected $ORDER_TYPE;
@@ -28,8 +33,9 @@ class AuthController extends Controller
     protected $addressApi;
     protected $normalcurl;
     
-    
-    function __construct(){
+
+    function __construct()
+    {
     $this->SSO_API = new SSOComponent();
 		$this->customer_API = new CustomerComponent(); 
     $this->ProductController= new ProductController();
@@ -37,6 +43,7 @@ class AuthController extends Controller
     $this->SUBS_ORDER_TYPE = config( 'global-constants.PRODUCT_FETCH.SUBS_ORDER_TYPE' );
     $this->STORE_ID = config( 'global-constants.PRODUCT_FETCH.STORE_ID' );
     $this->normalcurl = new Normalcurl();
+    $this->Custom_API = new CustomApi();
     }
 
 /**
@@ -77,8 +84,11 @@ class AuthController extends Controller
             "username" => $request->email,
             "password" => $request->password,
         ];  
-        $user_respose = $this->customer_API->userLogin($credential);  
-       
+        $user_respose = $this->customer_API->userLogin($credential);   
+      if(isset($user_respose['isError']))
+      {
+        return redirect()->back()->withErrors(['login_error'=>"Authentication Failed"])->withInput($request->input());
+      }
           if(isset($user_respose['CustomerId']) && $user_respose['CustomerId'] == Session::get('userfromtoken') ) {
               $accountDisableStatus=config( 'global-constants.DEFAULT_PARAMS.ACCOUNT_DISABLE_STATUS' );
               $customerType=config( 'global-constants.DEFAULT_PARAMS.CUSTOMER_TYPE_GUEST' );
@@ -124,14 +134,26 @@ class AuthController extends Controller
                 'autoship_ids'=>$product['autoship_ids'],
                 'price_currency'=>$product['regular_product_details']['price_currency'],
                 'vbkit'=>($product['regular_product_details']['vbkit'] == null)? 0 : $productarray['regular_product_details']['vbkit']];
-                $this->main_add_to_cart( $productstoaddtocart );
+                // $this->main_add_to_cart( $productstoaddtocart );
+                $responsecartapi = Http::post(env('nvisionu')."/api/main_add_to_cart",$productstoaddtocart ); 
+              
               }
-          
-               $sendcarttocheckout =  $this->send_cart_to_checkout();
-               if($sendcarttocheckout['success'])
-               {
-                return  redirect($sendcarttocheckout['link']);
-               }else
+              $responsecartapi = json_decode($responsecartapi,true);
+    
+              if(isset($responsecartapi['success']))
+              {
+                $data = ['userid'=> $userId,'user_lang'=>  $user_lang,'user_country'=> $user_country] ;
+               
+                $sendcarttocheckout = Http::get(env('nvisionu')."/api/send_cart_to_checkout",$data); 
+                $sendcarttocheckout =  json_decode($sendcarttocheckout,true); 
+                if($sendcarttocheckout['success'])
+              {
+                return redirect()->away($sendcarttocheckout['link']);
+              }else
+              {
+                return $sendcarttocheckout;
+              }
+            } else
                {
                 $error = "Something went wrong."; 
                 return redirect()->back()->withErrors(['login_error'=>$error])->withInput($request->input());
