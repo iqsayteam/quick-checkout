@@ -160,12 +160,13 @@ class AuthController extends Controller
                 return redirect()->away($sendcarttocheckout['link']);
               }else
               {
-                return $sendcarttocheckout;
+                return redirect(env('collectionPage'));
               }
             } else
                {
                 $error = "Something went wrong."; 
-                return redirect()->back()->withErrors(['login_error'=>$error])->withInput($request->input());
+                // return redirect()->back()->withErrors(['login_error'=>$error])->withInput($request->input());
+                return redirect(env('collectionPage'));
                }
                
           } else {
