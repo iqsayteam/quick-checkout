@@ -180,17 +180,19 @@ public function isValidBase64($encodedString) {
             $user=$data[1];  
             $explodeitems = explode(',',$item);
             $product=[]; 
-            $user_respose = $this->customer_API->get_customer_by_id( $user); 
+            $user_respose = $this->customer_API->get_customer_by_id( $user);
+            
             Session::put('userfromtoken',$user); 
             Session::put('price_group',get_price_group_id_for_user_type($user_respose['CustomerType']));
             $price_group = get_price_group_id_for_user_type($user_respose['CustomerType']);
             $response = new Response();
             $response->cookie('country_code', $user_respose['PrimaryAddress']['CountryCode'] ); // 'country_code' is the name of the cookie
             $response->cookie('language_code', $user_respose['LanguageCode'] ); // 'language_code' is the name of the cookie
-            $user_respose['currency_code'] = Http::get(env('nvisionu')."/api/get_currency",$user_respose['PrimaryAddress']['CountryCode'] ); 
+            $user_respose['currency_code'] = Http::get(env('nvisionu')."/api/get_currency",['countryCode'=>$user_respose['PrimaryAddress']['CountryCode']] ); 
+           
             $user_respose['currency_symbol'] = $user_respose['currency_code']['currency_symbol'];
             $user_respose['currency_code'] = $user_respose['currency_code']['currency_code'];
- 
+            
             // $user_respose['currency_code'] = get_currency();  
                 foreach($explodeitems as $items)
                 {  

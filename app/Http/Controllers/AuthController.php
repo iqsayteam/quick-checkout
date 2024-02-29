@@ -104,8 +104,7 @@ class AuthController extends Controller
                Cookie::queue( Cookie::forget('distributor'));
               
               $userId = $user_respose['CustomerId'];
-              $userEmail = $user_respose['EmailAddress'];
-              
+              $userEmail = $user_respose['EmailAddress']; 
               $webAlias = $user_respose['WebAlias'];
               $request->session()->put('user_id', $userId);
               $request->session()->put('user_email', $userEmail);
@@ -123,7 +122,8 @@ class AuthController extends Controller
               }
               
              $price_group= Session::get('price_group');
-              $productarray = json_decode($request->products,true);  
+              $productarray = json_decode($request->products,true); 
+              
               foreach($productarray as $product)
               {
                 $productstoaddtocart  = [ 'product_id'=>$product['product_id_slug'],
@@ -133,19 +133,28 @@ class AuthController extends Controller
                 'group'=>$price_group,
                 'autoship_ids'=>$product['autoship_ids'],
                 'price_currency'=>$product['regular_product_details']['price_currency'],
-                'vbkit'=>($product['regular_product_details']['vbkit'] == null)? 0 : $productarray['regular_product_details']['vbkit']];
+                'product_type_vbkit'=>$product['product_type'],
+                'vbkit'=>($product['regular_product_details']['vbkit'] == null)? 0 : $product['regular_product_details']['vbkit'],
+                'userId'=>$userId,
+                'user_country'=> $user_country,
+                'user_lang'=>$user_lang,
+              ];
+                
                 // $this->main_add_to_cart( $productstoaddtocart );
                 $responsecartapi = Http::post(env('nvisionu')."/api/main_add_to_cart",$productstoaddtocart ); 
               
-              }
-              $responsecartapi = json_decode($responsecartapi,true);
-    
+              }  
+              $responsecartapi = json_decode($responsecartapi,true); 
+            
+      
               if(isset($responsecartapi['success']))
               {
                 $data = ['userid'=> $userId,'user_lang'=>  $user_lang,'user_country'=> $user_country] ;
-               
-                $sendcarttocheckout = Http::get(env('nvisionu')."/api/send_cart_to_checkout",$data); 
+       
+                $sendcarttocheckout = Http::get(env('nvisionu')."/api/send_cart_to_checkout",$data);
+      
                 $sendcarttocheckout =  json_decode($sendcarttocheckout,true); 
+       
                 if($sendcarttocheckout['success'])
               {
                 return redirect()->away($sendcarttocheckout['link']);
@@ -569,7 +578,6 @@ public function addToCartDB($product, $cartId) {
       $country_code = $_COOKIE['country_code'];
       $language_code = $_COOKIE['language_code'];
       $userId = session()->get( 'userfromtoken' );
-      
       
       $cart_data = CartHome::where( [ 'user_id' => $userId,'country_code'=>$country_code] )->first();
      
