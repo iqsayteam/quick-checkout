@@ -120,10 +120,32 @@ class CheckoutController extends Controller
  
     public function createUniqueLink(Request $request)
     {
-        $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"], ['user_id'=>1015190,'item_id'=>"1555,1554"]); //api data to be configured here with which we will recieve customer_id and item_id(s)
+
+      $response =  Http::post(env('getitemswithusers'));
+   
+      $respArray = json_decode($response,true);
+      $userlist = [];
+
+      
+      foreach($respArray['data'] as $user_item)
+      {
+        $userlist[] = ['user_id'=>$user_item['associateID'],'item_id'=>$user_item["serviceID"]];
+      }
+      
+        // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"], ['user_id'=>1015190,'item_id'=>"1555,1554"]); //api data to be configured here with which we will recieve customer_id and item_id(s)
         foreach($userlist as $userid)
         { 
-            $user_respose = $this->customer_API->get_customer_by_id($userid['user_id']);  
+            $user_respose = Quicklinks::where('customer_id',$userid['user_id'])->first(); 
+            if(($user_respose == null))
+            {
+                $flag = 0;
+                $user_respose = $this->customer_API->get_customer_by_id($userid['user_id']);  
+            } else
+            {
+                
+                $flag = 1;
+                $user_respose = $user_respose->toArray();
+            } 
             if(!empty( $user_respose))
             {
                 $item=$userid['item_id'];
@@ -133,13 +155,15 @@ class CheckoutController extends Controller
                 Quicklinks::updateOrCreate(
                     ['customer_id' => $userid],
                     [ 
-                        'email' => $user_respose['EmailAddress'], 
+                        'email' => ($flag == 1) ? $user_respose['email'] : $user_respose['EmailAddress'], 
                         'items' => $item,
                         'quicklink' => $encryptedData,
                         'status' =>1, 
                         ]
                     );
+                 
                  $url[] = url('login/'.$encryptedData);
+                  
             }
              
         } 
@@ -192,17 +216,17 @@ public function isValidBase64($encodedString) {
            
             $user_respose['currency_symbol'] = $user_respose['currency_code']['currency_symbol'];
             $user_respose['currency_code'] = $user_respose['currency_code']['currency_code'];
-            
+            $products =[];
             // $user_respose['currency_code'] = get_currency();  
                 foreach($explodeitems as $items)
                 {  
                     // $response = $this->getDirectProductbyId($items,$user_respose['PrimaryAddress']['CountryCode'],$user_respose['LanguageCode'],$price_group); 
                     $datatosend = ['items'=>$items,'CountryCode'=>$user_respose['PrimaryAddress']['CountryCode'],'LanguageCode'=>$user_respose['LanguageCode'],'price_group'=>$price_group];
                 $response = Http::post(env('nvisionu')."/api/getdirectproductbyid",$datatosend);   
-              
+            
                 $response =json_decode($response,true);
-              
-                    if($response['productFoundForSelectedLocation'] && $response['regular_product_details']['status'] && $response['regular_product_details']['stock'] && $response['regular_product_details']['stock']  && $response['regular_product_details']['disabled'] == 0)
+            
+                    if(isset($response['productFoundForSelectedLocation']) && $response['productFoundForSelectedLocation'] && $response['regular_product_details']['status'] && $response['regular_product_details']['stock'] && $response['regular_product_details']['stock']  && $response['regular_product_details']['disabled'] == 0)
                     { 
                         $products[] =$response ; 
                     } 
