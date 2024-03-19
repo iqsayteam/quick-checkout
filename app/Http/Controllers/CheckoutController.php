@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Session;
 use App\Components\Directscale\Address;
 use App\Components\Directscale\CartController;
 use Illuminate\Http\Response;
+use Carbon\Carbon;
 
    
 class CheckoutController extends Controller
@@ -120,12 +121,26 @@ class CheckoutController extends Controller
  
     public function createUniqueLink(Request $request)
     {
+        // Assuming you have Carbon namespace imported
 
-      $response =  Http::post(env('getitemswithusers'));
-  
+        // Current date
+        $now = Carbon::now();
+
+        // Add 7 days to both FromDate and ToDate
+        $dates = array(
+            "FromDate" => $now->copy()->startOfDay()->addDays(7),
+            "ToDate" => $now->copy()->endOfDay()->addDays(7)
+        );
+
+       
+      $response =  Http::post(env('getitemswithusers'), $dates);
+       
+    if(!$response->successful())
+    {
+        return ['Status'=>false, 'Message' => "Something Went Wrong" , 'API_Response' => $response];
+    }
       $respArray = json_decode($response,true);
-      $userlist = [];
-  
+      $userlist = []; 
       if(!isset($respArray['data']))
       {
         return ['Status'=> false , "message" => "Something went wrong" , "API_Response" => $respArray];
@@ -173,7 +188,7 @@ class CheckoutController extends Controller
                     if ($response->successful()) { 
                         $url[] = url('login/'.$encryptedData);
                     } 
-                }      
+                }       
             }
              
         }  
