@@ -122,17 +122,21 @@ class CheckoutController extends Controller
     {
 
       $response =  Http::post(env('getitemswithusers'));
-   
+  
       $respArray = json_decode($response,true);
       $userlist = [];
-
-      
+  
+      if(!isset($respArray['data']))
+      {
+        return ['Status'=> false , "message" => "Something went wrong" , "API_Response" => $respArray];
+      }
+ 
       foreach($respArray['data'] as $user_item)
       {
         $userlist[] = ['user_id'=>$user_item['associateID'],'item_id'=>$user_item["serviceID"]];
       }
       
-        // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"], ['user_id'=>1015190,'item_id'=>"1555,1554"]); //api data to be configured here with which we will recieve customer_id and item_id(s)
+        // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"] ); //api data to be configured here with which we will recieve customer_id and item_id(s)
         foreach($userlist as $userid)
         { 
             $user_respose = Quicklinks::where('customer_id',$userid['user_id'])->first(); 
@@ -146,24 +150,30 @@ class CheckoutController extends Controller
                 $flag = 1;
                 $user_respose = $user_respose->toArray();
             } 
+            $email  = ($flag == 1) ? $user_respose['email'] : $user_respose['EmailAddress'];
             if(!empty( $user_respose))
             {
                 $item=$userid['item_id'];
                 $userid=$userid['user_id'];
                 $stringToEncode = $item.'&&'.$userid; 
                 $encryptedData = base64_encode($stringToEncode); 
-                Quicklinks::updateOrCreate(
+                $result = Quicklinks::updateOrCreate(
                     ['customer_id' => $userid],
                     [ 
-                        'email' => ($flag == 1) ? $user_respose['email'] : $user_respose['EmailAddress'], 
+                        'email' => $email, 
                         'items' => $item,
                         'quicklink' => $encryptedData,
                         'status' =>1, 
-                        ]
-                    );
+                    ]
+                );
+                if ($result) {
+                    $perams = ["EmailAddress"=>$email,"UniqueLink"=>$encryptedData];
                  
-                 $url[] = url('login/'.$encryptedData);
-                  
+                    $response =  Http::post(env('urlToSendUniqueLink'), json_encode($perams) );
+                    if ($response->successful()) { 
+                        $url[] = url('login/'.$encryptedData);
+                    } 
+                }      
             }
              
         } 
@@ -198,14 +208,14 @@ public function isValidBase64($encodedString) {
     public function login_page(Request $request)
     { 
         $quicklinks = Quicklinks::where('quicklink',$request->token)->first();
+      
         if ($this->isValidBase64($request->token) && $quicklinks !== null) { 
             $data =explode("&&", base64_decode( $request->token)); 
             $item=$data[0];
             $user=$data[1];  
             $explodeitems = explode(',',$item);
             $product=[]; 
-            $user_respose = $this->customer_API->get_customer_by_id( $user);
-            
+            $user_respose = $this->customer_API->get_customer_by_id( $user); 
             Session::put('userfromtoken',$user); 
             Session::put('price_group',get_price_group_id_for_user_type($user_respose['CustomerType']));
             $price_group = get_price_group_id_for_user_type($user_respose['CustomerType']);
