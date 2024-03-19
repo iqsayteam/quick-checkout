@@ -176,7 +176,7 @@ class CheckoutController extends Controller
                 }      
             }
              
-        } 
+        }  
         return ['status'=>'success', 'message'=>'Unique links created','response'=>$url];
     }
   
