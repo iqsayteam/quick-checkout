@@ -14,6 +14,7 @@ class Quicklinks extends Model
         'customer_id',  
         'items',  
         'quicklink',  
+        'service_id',  
         'status',  
     ];
 
