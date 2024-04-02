@@ -154,6 +154,8 @@ $i=1;
                 return $item['service_id'] == $userdata['serviceID'];
             });
             $resetfilteredArray = reset($filteredArray); 
+          if($resetfilteredArray != false)
+          {
             $result = serviceProduct::updateOrCreate(
                 [
                     'user_id' => $userdata['associateID'],
@@ -163,6 +165,8 @@ $i=1;
                     'item_ids' => $resetfilteredArray['item_ids'],
                 ]
             );
+          }
+          
         } 
  
         if ($result) { 
