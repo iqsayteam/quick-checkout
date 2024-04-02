@@ -34,10 +34,23 @@
                                     ?>
                                     
                                     @foreach ($product as  $productdata) 
-                                <?php  
-								 $price = $productdata['regular_product_details']['price']  ; 
-								// Formatting the price to always show two decimal places
-								$price = number_format($price, 2);
+                                <?php
+								 $price = (float)$productdata['regular_product_details']['price']  ; 
+
+								 if (is_numeric($price)) {
+									// Check if $price is an integer
+									if (intval($price) == $price) {
+										// Format the integer value with two decimal places
+										$price_formatted = number_format($price, 2);
+									 
+									} else {
+									  "Invalid price value";
+									}
+								} else {
+									  "Invalid price value";
+								}
+							 
+								 
 								   $subtotal += $price; 
 								   ?>
 									<tr>
@@ -51,7 +64,7 @@
 												<div class="prdt_titleleft">
 													<h5>{{$productdata['regular_product_details']['product_name']}}</h5>
 													<ul class="instock_list">
-														<li>{{$user_respose['currency_symbol'].''.$price}}</li>
+														<li>{{$user_respose['currency_symbol'].''.$price_formatted}}</li>
 														<li>x1</li>
                                                         
                                                        @if($productdata['regular_product_details']['stock'] == 0)
@@ -66,7 +79,7 @@
                                                 @if($productdata['regular_product_details']['stock'] == 0)
                                                 <span>{{$user_respose['currency_symbol'].'0'}}</span>
                                                        @else
-                                                       <span>{{$user_respose['currency_symbol'].''.$price}}</span>
+                                                       <span>{{$user_respose['currency_symbol'].''.$price_formatted}}</span>
                                                        @endif
 												
 												</div>
@@ -83,7 +96,7 @@
 												<span>Subtotal:</span>
 											</td>
 											<td class="Total_quickprice" align="right">
-												<span>  {{$user_respose['currency_symbol'].''.$subtotal}}</span>
+												<span>  {{$user_respose['currency_symbol'].''.number_format($subtotal, 2) }}</span>
 											</td>
 										</tr>
 									 
@@ -94,7 +107,7 @@
 												<span>Total:</span>
 											</td>
 											<td class="total_tfRight" align="right">
-											<span>  {{$user_respose['currency_symbol'].''.$subtotal}}</span>
+											<span>  {{$user_respose['currency_symbol'].''. number_format($subtotal, 2)}}</span>
 											</td>
 										</tr>
 									</tfoot>
