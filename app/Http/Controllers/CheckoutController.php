@@ -137,7 +137,7 @@ class CheckoutController extends Controller
         if (!isset($respArray['data'])) {
             return ['Status' => false, "message" => "Something went wrong", "API_Response" => $respArray];
         }
-       
+
 
  $response = $this->quickcheckoutserviceitemsapi();
  $data = json_decode($response->body());
@@ -146,19 +146,23 @@ class CheckoutController extends Controller
     return ['Status' => false, "message" => "Something went wrong", "API_Response" => $response];
 }
  $service_item_array = json_decode($data->data,true);
+ 
 $i=1; 
         foreach ($respArray['data'] as $userdata) {
             $i++; 
             $filteredArray = array_filter($service_item_array, function($item) use ($userdata) {
                 return $item['service_id'] == $userdata['serviceID'];
             });
-            $resetfilteredArray = reset($filteredArray);
-   
-            $result = serviceProduct::create([
-                'user_id' => $userdata['associateID'],
-                'service_id' => $userdata['serviceID'],
-                'item_ids' =>$resetfilteredArray['item_ids'],
-            ]);
+            $resetfilteredArray = reset($filteredArray); 
+            $result = serviceProduct::updateOrCreate(
+                [
+                    'user_id' => $userdata['associateID'],
+                    'service_id' => $userdata['serviceID']
+                ],
+                [
+                    'item_ids' => $resetfilteredArray['item_ids'],
+                ]
+            );
         } 
  
         if ($result) { 
@@ -181,37 +185,48 @@ $i=1;
 
     public function createUniqueLink(Request $request)
     {
-
-        $respArray['data'] = $this->getServiceIdsFromDB(); 
-        if(!$respArray['status'])
-        {
-            return ['status' => false, 'message' => 'data not added to database', 'response' =>$respArray['data'] ]; 
-        }
+        ini_set('max_execution_time', 1000);  
+        // $respArray['data'] = $this->getServiceIdsFromDB(); 
+ 
+        // if(isset($respArray['data']['status']) && !$respArray['data']['status'])
+        // {
+        //     return ['status' => false, 'message' => 'data not added to database', 'response' =>$respArray['data'] ]; 
+        // }
         $respArray['data'] = serviceProduct::get();
-      
+ 
         foreach ($respArray['data'] as $user_item) { 
-            $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"]];
+         
+            $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
         }
-
+    
         // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"] ); //api data to be configured here with which we will recieve customer_id and item_id(s)
-        foreach ($userlist as $userid) {
-            $user_respose = Quicklinks::where('customer_id', $userid['user_id'])->first();
+        foreach ($userlist as $userdata) {
+          
+            $user_respose = Quicklinks::where('customer_id', $userdata['user_id'])->first();
+   
             if (($user_respose == null)) {
                 $flag = 0;
-                $user_respose = $this->customer_API->get_customer_by_id($userid['user_id']);
+                $user_respose = $this->customer_API->get_customer_by_id($userdata['user_id']);
             } else {
 
                 $flag = 1;
                 $user_respose = $user_respose->toArray();
             }
+
             $email = ($flag == 1) ? $user_respose['email'] : $user_respose['EmailAddress'];
+        
             if (!empty($user_respose)) {
-                $item = $userid['item_id'];
-                $userid = $userid['user_id'];
+                $item = $userdata['item_id'];
+                $userid = $userdata['user_id']; 
+                $service_id = $userdata['service_id'];
                 $stringToEncode = $item . '&&' . $userid;
                 $encryptedData = base64_encode($stringToEncode);
+            
                 $result = Quicklinks::updateOrCreate(
-                    ['customer_id' => $userid],
+                    [
+                        'customer_id' => $userid,
+                        'service_id'=> $service_id
+                    ],
                     [
                         'email' => $email,
                         'items' => $item,
