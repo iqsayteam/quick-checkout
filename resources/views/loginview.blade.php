@@ -36,7 +36,7 @@
                                     @foreach ($product as  $productdata) 
                                 <?php
 								 $price = (float)$productdata['regular_product_details']['price']  ; 
-
+									
 								 if (is_numeric($price)) {
 									// Check if $price is an integer
 									if (intval($price) == $price) {
@@ -44,7 +44,7 @@
 										$price_formatted = number_format($price, 2);
 									 
 									} else {
-									  "Invalid price value";
+										$price_formatted = $price;
 									}
 								} else {
 									  "Invalid price value";
