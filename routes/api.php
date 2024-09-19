@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('getuniquelink', [CheckoutController::class, 'createUniqueLink'])->name('getuniquelink');
+Route::get('getuniquelink/{user_id}', [CheckoutController::class, 'createUniqueLink'])->name('getuniquelink');
