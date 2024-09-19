@@ -167,14 +167,8 @@ $i=1;
             );
           }
           
-        } 
- 
-        if ($result) { 
-            return ['status' => true];
-        } else {
-            return ['status' => false];
-        }
-
+        }  
+        return ['status' => true]; 
     }
     /**
      * Created By: Raju
@@ -197,10 +191,22 @@ $i=1;
             return ['status' => false, 'message' => 'data not added to database', 'response' =>$respArray['data'] ]; 
         }
         $respArray['data'] = serviceProduct::get();
- 
-        foreach ($respArray['data'] as $user_item) { 
-         
-            $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
+        $userflag = false;
+        if(isset($request->user_id)){
+             $userflag = true;
+        }
+        foreach ($respArray['data'] as $user_item) {  
+            if($userflag)
+            {
+                if($user_item['user_id'] == $request->user_id)
+                { 
+                    $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
+                }
+            }else
+            { 
+                $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
+            }
+
         }
     
         // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"] ); //api data to be configured here with which we will recieve customer_id and item_id(s)
