@@ -201,17 +201,13 @@ $i=1;
                 if($user_item['user_id'] == $request->user_id)
                 { 
                     $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
-                }else
-                {
-                    return ['status'=>404, "Message"=>"No Records Found.", "response"=> ""];
-                }
+                } 
             }else
             { 
                 $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
             }
 
-        }
-    
+        } 
         // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"] ); //api data to be configured here with which we will recieve customer_id and item_id(s)
         foreach ($userlist as $userdata) {
           
@@ -256,8 +252,7 @@ $i=1;
                     // }
                     $url[] = url('login/' . $encryptedData);
                 }
-            }
-
+            } 
         }
         return ['status' => 'success', 'message' => 'Unique links created', 'response' => $url];
     }
