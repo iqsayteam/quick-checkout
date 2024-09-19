@@ -201,6 +201,9 @@ $i=1;
                 if($user_item['user_id'] == $request->user_id)
                 { 
                     $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
+                }else
+                {
+                    return ['status'=>404, "Message"=>"No Records Found.", "response"=> ""];
                 }
             }else
             { 
