@@ -246,10 +246,10 @@ $i=1;
                 if ($result) {
                     $perams = ["EmailAddress" => $email, "UniqueLink" => $encryptedData];
 
-                    // $response =  Http::post(env('urlToSendUniqueLink'), json_encode($perams) );
-                    // if ($response->successful()) {
-                    //     $url[] = url('login/'.$encryptedData);
-                    // }
+                    $response =  Http::post(env('urlToSendUniqueLink'), json_encode($perams) );
+                    if ($response->successful()) {
+                        $url[] = url('login/'.$encryptedData);
+                    }
                     $url[] = url('login/' . $encryptedData);
                 }
             } 
