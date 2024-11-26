@@ -124,8 +124,8 @@ class CheckoutController extends Controller
         $now = Carbon::now();
         // Add 7 days to both FromDate and ToDate
         $dates = array(
-            "FromDate" => $now->copy()->startOfDay()->addDays(7),
-            "ToDate" => $now->copy()->endOfDay()->addDays(7),
+            "FromDate" => $now->copy()->startOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS")),
+            "ToDate" => $now->copy()->endOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS")),
         );
         $response = Http::post(env('getitemswithusers'), $dates);
 
@@ -185,7 +185,7 @@ $i=1;
     {
         ini_set('max_execution_time', 1000);  
         $respArray['data'] = $this->getServiceIdsFromDB(); 
- 
+
         if(isset($respArray['data']['status']) && !$respArray['data']['status'])
         {
             return ['status' => false, 'message' => 'data not added to database', 'response' =>$respArray['data'] ]; 
@@ -195,6 +195,7 @@ $i=1;
         if(isset($request->user_id)){
              $userflag = true;
         }
+
         foreach ($respArray['data'] as $user_item) {  
             if($userflag)
             {
@@ -207,8 +208,10 @@ $i=1;
                 $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
             }
 
-        } 
+        }
+       
         // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"] ); //api data to be configured here with which we will recieve customer_id and item_id(s)
+     
         foreach ($userlist as $userdata) {
           
             $user_respose = Quicklinks::where('customer_id', $userdata['user_id'])->first();
@@ -223,7 +226,7 @@ $i=1;
             }
 
             $email = ($flag == 1) ? $user_respose['email'] : $user_respose['EmailAddress'];
-        
+           
             if (!empty($user_respose)) {
                 $item = $userdata['item_id'];
                 $userid = $userdata['user_id']; 
@@ -231,27 +234,28 @@ $i=1;
                 $stringToEncode = $item . '&&' . $userid;
                 $encryptedData = base64_encode($stringToEncode);
             
-                $result = Quicklinks::updateOrCreate(
-                    [
-                        'customer_id' => $userid,
-                        'service_id'=> $service_id
-                    ],
-                    [
-                        'email' => $email,
-                        'items' => $item,
-                        'quicklink' => $encryptedData,
-                        'status' => 1,
-                    ]
-                );
-                if ($result) {
-                    $perams = ["EmailAddress" => $email, "UniqueLink" => $encryptedData];
-
-                    $response =  Http::post(env('urlToSendUniqueLink'), json_encode($perams) );
-                    if ($response->successful()) {
-                        $url[] = url('login/'.$encryptedData);
-                    }
-                    $url[] = url('login/' . $encryptedData);
+         
+                $now = Carbon::now();
+                $perams = ["EmailAddress" => $email, "UniqueLink" => $encryptedData,"ExpireIn"=> env("SUBSCRIPTION_EXPIRE_IN_DAYS"),"EndDate"=> $now->copy()->endOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS"))->format('F j, Y')];
+          
+                $response =  Http::post(env('urlToSendUniqueLink'), json_encode($perams) );
+                if ($response->successful()) {
+                     Quicklinks::updateOrCreate(
+                        [
+                            'customer_id' => $userid,
+                            'service_id'=> $service_id
+                        ],
+                        [
+                            'email' => $email,
+                            'items' => $item,
+                            'quicklink' => $encryptedData,
+                            'status' => 1,
+                        ]
+                    );
+                    $url[] = url('login/'.$encryptedData);
                 }
+                $url[] = url('login/' . $encryptedData);
+               
             } 
         }
         return ['status' => 'success', 'message' => 'Unique links created', 'response' => $url];
