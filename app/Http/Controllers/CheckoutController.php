@@ -209,7 +209,10 @@ $i=1;
             }
 
         }
-       
+      if(count($userlist) == 0)
+      {
+        return ['No Service Gettig Expired.'];
+      }
         // $userlist = array(['user_id'=>142559,'item_id'=>"1555,1554"] ); //api data to be configured here with which we will recieve customer_id and item_id(s)
      
         foreach ($userlist as $userdata) {
