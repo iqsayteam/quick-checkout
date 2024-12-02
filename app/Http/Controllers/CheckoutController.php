@@ -239,9 +239,9 @@ $i=1;
             
          
                 $now = Carbon::now();
-                $perams = ["EmailAddress" => $email, "UniqueLink" => $encryptedData,"ExpireIn"=> env("SUBSCRIPTION_EXPIRE_IN_DAYS"),"EndDate"=> $now->copy()->endOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS"))->format('F j, Y')];
+                $perams = ["EmailAddress" => $email, "UniqueLink" => url('login/' . $encryptedData),"ExpireIn"=> env("SUBSCRIPTION_EXPIRE_IN_DAYS"),"EndDate"=> $now->copy()->endOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS"))->format('F j, Y')];
           
-                $response =  Http::post(env('urlToSendUniqueLink'), $perams );
+                $response =  Http::post(env('urlToSendUniqueLink'),  $perams  );
                 if ($response->successful()) {
                      Quicklinks::updateOrCreate(
                         [
