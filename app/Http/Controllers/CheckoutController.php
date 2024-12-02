@@ -241,7 +241,7 @@ $i=1;
                 $now = Carbon::now();
                 $perams = ["EmailAddress" => $email, "UniqueLink" => $encryptedData,"ExpireIn"=> env("SUBSCRIPTION_EXPIRE_IN_DAYS"),"EndDate"=> $now->copy()->endOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS"))->format('F j, Y')];
           
-                $response =  Http::post(env('urlToSendUniqueLink'), json_encode($perams) );
+                $response =  Http::post(env('urlToSendUniqueLink'), $perams );
                 if ($response->successful()) {
                      Quicklinks::updateOrCreate(
                         [
