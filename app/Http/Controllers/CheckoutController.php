@@ -195,7 +195,7 @@ $i=1;
         if(isset($request->user_id)){
              $userflag = true;
         }
-
+        $userlist =[];
         foreach ($respArray['data'] as $user_item) {  
             if($userflag)
             {
