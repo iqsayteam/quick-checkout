@@ -299,8 +299,10 @@ $i=1;
             $item = $data[0];
             $user = $data[1];
             $explodeitems = explode(',', $item);
+            
             $product = [];
             $user_respose = $this->customer_API->get_customer_by_id($user);
+       
             Session::put('userfromtoken', $user);
             Session::put('price_group', get_price_group_id_for_user_type($user_respose['CustomerType']));
             $price_group = get_price_group_id_for_user_type($user_respose['CustomerType']);
@@ -317,17 +319,18 @@ $i=1;
                 // $response = $this->getDirectProductbyId($items,$user_respose['PrimaryAddress']['CountryCode'],$user_respose['LanguageCode'],$price_group);
                 $datatosend = ['items' => $items, 'CountryCode' => $user_respose['PrimaryAddress']['CountryCode'], 'LanguageCode' => $user_respose['LanguageCode'], 'price_group' => $price_group];
                 $response = Http::post(env('nvisionu') . "/api/getdirectproductbyid", $datatosend);
-
+                
                 $response = json_decode($response, true);
-
-                if (isset($response['productFoundForSelectedLocation']) && $response['productFoundForSelectedLocation'] && $response['regular_product_details']['status'] && $response['regular_product_details']['stock'] && $response['regular_product_details']['stock'] && $response['regular_product_details']['disabled'] == 0) {
+    
+                
+                if (isset($response['productFoundForSelectedLocation']) && $response['productFoundForSelectedLocation'] && $response['regular_product_details']['status'] && $response['regular_product_details']['stock'] && $response['regular_product_details']['disabled'] == 0) {
                     $products[] = $response;
                 }
                 // $products[] = $this->Products->get_product_by_id($items);
             }
 
             $product = $products;
-
+         
             if (count($product) == 0) {
                 return redirect(env('collectionPage'));
             }
