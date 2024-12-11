@@ -181,7 +181,7 @@ $i=1;
      * @return [type]
      */
 
-    public function createUniqueLink(Request $request)
+     public function createUniqueLink(Request $request)
     {
         ini_set('max_execution_time', 1000);  
         $respArray['data'] = $this->getServiceIdsFromDB(); 
@@ -196,6 +196,7 @@ $i=1;
              $userflag = true;
         }
         $userlist =[];
+
         foreach ($respArray['data'] as $user_item) {  
             if($userflag)
             {
@@ -209,6 +210,31 @@ $i=1;
             }
 
         }
+
+        $uniqueUsers = [];
+
+        foreach ($userlist as $entry) {
+            $user_id = $entry['user_id'];
+            $item_id = $entry['item_id'];
+        
+            // Ensure item_id is always treated as an array by using explode()
+            $item_id_array = explode(',', $item_id);
+        
+            if (isset($uniqueUsers[$user_id])) {
+                // Merge item_id values while ensuring both are arrays
+                $existing_item_id_array = explode(',', $uniqueUsers[$user_id]['item_id']);
+                $merged_item_ids = array_unique(array_merge($existing_item_id_array, $item_id_array));
+                // Save the merged item_ids as a comma-separated string
+                $uniqueUsers[$user_id]['item_id'] = implode(',', $merged_item_ids);
+            } else {
+                // Add a new entry for the user if not already present
+                $uniqueUsers[$user_id] = $entry;
+            }
+        }
+        
+        // Convert the result to a simple array
+        $userlist = array_values($uniqueUsers);
+      
       if(count($userlist) == 0)
       {
         return ['No Service Gettig Expired.'];
@@ -256,13 +282,18 @@ $i=1;
                         ]
                     );
                     $url[] = url('login/'.$encryptedData);
+                }else
+                {
+
+                    $url[] = url('login/' . $encryptedData);
                 }
-                $url[] = url('login/' . $encryptedData);
                
             } 
         }
+
         return ['status' => 'success', 'message' => 'Unique links created', 'response' => $url];
     }
+
 
 /**
  * Created By: Raju
