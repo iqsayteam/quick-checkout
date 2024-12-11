@@ -239,7 +239,7 @@ foreach($respArray['data'] as $userdata)
                     ]
                 );
                 if ($result) {
-                    $perams = ["EmailAddress"=>$email,"UniqueLink"=>$encryptedData];
+                    
                  
                     // $response =  Http::post(env('urlToSendUniqueLink'), json_encode($perams) );
                     // if ($response->successful()) { 
