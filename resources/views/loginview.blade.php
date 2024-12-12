@@ -134,7 +134,7 @@
 											</div>
 										</div>
 										<div class="input-group chk-forgot">
-											<a href="javascript:void(0)" class="forgotpslink">Forgot password?</a>
+											<a href="{{env('forgotPwd')}}" class="forgotpslink">Forgot password?</a>
 										</div>
 										<div class="submitbtn_chk">
 											<button id="submitbtn_chk" type="submit" class="submit-btnchk">log in</button>
