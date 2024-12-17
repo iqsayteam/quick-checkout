@@ -183,9 +183,7 @@ $i=1;
 
      public function createUniqueLink(Request $request)
     {
-        Log::info(['cron working']);
-        exit; 
-          
+         
         ini_set('max_execution_time', 1000);  
         $respArray['data'] = $this->getServiceIdsFromDB(); 
  
