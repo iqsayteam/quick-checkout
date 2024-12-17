@@ -183,9 +183,10 @@ $i=1;
 
      public function createUniqueLink(Request $request)
     {
+         
         ini_set('max_execution_time', 1000);  
         $respArray['data'] = $this->getServiceIdsFromDB(); 
-
+ 
         if(isset($respArray['data']['status']) && !$respArray['data']['status'])
         {
             return ['status' => false, 'message' => 'data not added to database', 'response' =>$respArray['data'] ]; 
