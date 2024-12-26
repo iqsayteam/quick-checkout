@@ -149,6 +149,10 @@ class CheckoutController extends Controller
  
 $i=1; 
         foreach ($respArray['data'] as $userdata) {
+            if($userdata['serviceID'] != 29)
+            {
+                continue;
+            }
             $i++; 
             $filteredArray = array_filter($service_item_array, function($item) use ($userdata) {
                 return $item['service_id'] == $userdata['serviceID'];
