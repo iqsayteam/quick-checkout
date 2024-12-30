@@ -118,7 +118,7 @@ class CheckoutController extends Controller
      * @return [type]
      */
 
-    public function getServiceIdsFromDB()
+    public function getServiceIdsFromDB($services=null)
     {
         ini_set('max_execution_time', 1000);  
         $now = Carbon::now();
@@ -137,7 +137,7 @@ class CheckoutController extends Controller
         if (!isset($respArray['data'])) {
             return ['Status' => false, "message" => "Something went wrong", "API_Response" => $respArray];
         }
-
+ 
 
  $response = $this->quickcheckoutserviceitemsapi();
  $data = json_decode($response->body());
@@ -148,16 +148,21 @@ class CheckoutController extends Controller
  $service_item_array = json_decode($data->data,true);
  
 $i=1; 
+ 
         foreach ($respArray['data'] as $userdata) {
-            if($userdata['serviceID'] != 29)
-            {
-                continue;
-            }
+if($services != null)
+      {
+        if(!in_array($userdata['serviceID'], $services))
+        {
+            continue;
+        }
+      }
             $i++; 
             $filteredArray = array_filter($service_item_array, function($item) use ($userdata) {
                 return $item['service_id'] == $userdata['serviceID'];
             });
-            $resetfilteredArray = reset($filteredArray); 
+            $resetfilteredArray[] = reset($filteredArray);
+         
           if($resetfilteredArray != false)
           {
             $result = serviceProduct::updateOrCreate(
@@ -172,6 +177,7 @@ $i=1;
           }
           
         }  
+       
         return ['status' => true]; 
     }
     /**
@@ -188,8 +194,19 @@ $i=1;
      public function createUniqueLink(Request $request)
     {
          
-        ini_set('max_execution_time', 1000);  
-        $respArray['data'] = $this->getServiceIdsFromDB(); 
+        ini_set('max_execution_time', 1000);
+        $serviceids=[];  
+      
+        if(isset($request->services))
+        {
+            $services = explode(',',$request->services);
+            $serviceids =   $services;
+        }else
+        {
+         $serviceids =   [29];
+        }
+      
+        $respArray['data'] = $this->getServiceIdsFromDB( $serviceids); 
  
         if(isset($respArray['data']['status']) && !$respArray['data']['status'])
         {
