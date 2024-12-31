@@ -119,7 +119,7 @@ class CheckoutController extends Controller
      */
 
     public function getServiceIdsFromDB($services=null)
-    {
+    { 
         ini_set('max_execution_time', 1000);  
         $now = Carbon::now();
         // Add 7 days to both FromDate and ToDate
@@ -133,20 +133,18 @@ class CheckoutController extends Controller
             return ['Status' => false, 'Message' => "Something Went Wrong", 'API_Response' => $response];
         }
         $respArray = json_decode($response, true); 
-
+        
         if (!isset($respArray['data'])) {
             return ['Status' => false, "message" => "Something went wrong", "API_Response" => $respArray];
         }
  
-
- $response = $this->quickcheckoutserviceitemsapi();
- $data = json_decode($response->body());
- if(!isset($data->data))
-{
-    return ['Status' => false, "message" => "Something went wrong", "API_Response" => $response];
-}
- $service_item_array = json_decode($data->data,true);
- 
+        $response = $this->quickcheckoutserviceitemsapi();
+        $data = json_decode($response->body());
+        if(!isset($data->data))
+        {
+            return ['Status' => false, "message" => "Something went wrong", "API_Response" => $response];
+        }
+        $service_item_array = json_decode($data->data,true); 
 $i=1; 
  
         foreach ($respArray['data'] as $userdata) {
@@ -162,8 +160,8 @@ $i=1;
             $filteredArray = array_filter($service_item_array, function($item) use ($userdata) {
                 return $item['service_id'] == $userdata['serviceID'];
             });
-            $resetfilteredArray[] = reset($filteredArray);
-         
+            $resetfilteredArray = reset($filteredArray);
+       
           if($resetfilteredArray != false)
           {
             $result = serviceProduct::updateOrCreate(
@@ -194,18 +192,12 @@ $i=1;
 
      public function createUniqueLink(Request $request)
     {
-         
+       
         ini_set('max_execution_time', 1000);
         $serviceids=[];  
-      
-        if(isset($request->services))
-        {
-            $services = explode(',',$request->services);
-            $serviceids =   $services;
-        }else
-        {
-         $serviceids =   [29];
-        }
+        $service_ids = env('services');
+        $services = explode(',',$service_ids);
+        $serviceids =   $services; 
       
         $respArray['data'] = $this->getServiceIdsFromDB( $serviceids); 
  
@@ -213,19 +205,23 @@ $i=1;
         {
             return ['status' => false, 'message' => 'data not added to database', 'response' =>$respArray['data'] ]; 
         }
-        $respArray['data'] = serviceProduct::get();
+  
+        $currentDate =   Carbon::today()->toDateString();
+        $respArray['data'] = serviceProduct::whereDate('updated_at', $currentDate)->get();
+      
         $userflag = false;
         if(isset($request->user_id)){
              $userflag = true;
         }
         $userlist =[];
-
+   
         foreach ($respArray['data'] as $user_item) {  
             if($userflag)
             {
                 if($user_item['user_id'] == $request->user_id)
                 { 
                     $userlist[] = ['user_id' => $user_item['user_id'], 'item_id' => $user_item["item_ids"], 'service_id' => $user_item["service_id"]];
+                    break;
                 } 
             }else
             { 
@@ -235,7 +231,7 @@ $i=1;
         }
 
         $uniqueUsers = [];
-
+  
         foreach ($userlist as $entry) {
             $user_id = $entry['user_id'];
             $item_id = $entry['item_id'];
@@ -254,10 +250,10 @@ $i=1;
                 $uniqueUsers[$user_id] = $entry;
             }
         }
-        
+
         // Convert the result to a simple array
         $userlist = array_values($uniqueUsers);
-      
+
       if(count($userlist) == 0)
       {
         return ['No Service Gettig Expired.'];
@@ -283,15 +279,14 @@ $i=1;
                 $item = $userdata['item_id'];
                 $userid = $userdata['user_id']; 
                 $service_id = $userdata['service_id'];
-                $stringToEncode = $item . '&&' . $userid;
-                $encryptedData = base64_encode($stringToEncode);
-            
-         
+                $stringToEncode = $item . '&&' . $userid; 
+                $encryptedData = base64_encode($stringToEncode); 
+
                 $now = Carbon::now();
                 $perams = ["EmailAddress" => $email, "UniqueLink" => url('login/' . $encryptedData),"ExpireIn"=> env("SUBSCRIPTION_EXPIRE_IN_DAYS"),"EndDate"=> $now->copy()->endOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS"))->format('F j, Y')];
           
-                $response =  Http::post(env('urlToSendUniqueLink'),  $perams  );
-                if ($response->successful()) {
+                // $response =  Http::post(env('urlToSendUniqueLink'),  $perams  );
+                if (isset($response) && $response->successful()) {
                      Quicklinks::updateOrCreate(
                         [
                             'customer_id' => $userid,
