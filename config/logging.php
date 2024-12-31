@@ -108,7 +108,6 @@ return [
             'driver' => 'errorlog',
             'level' => env('LOG_LEVEL', 'debug'),
         ],
-
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,
@@ -116,6 +115,11 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+        'LogServices' => [
+            'driver' => 'daily', // Use 'daily' for separate log files per day
+            'path' => storage_path('logs/LogServices.log'), // Path for the log file
+            'level' => env('LOG_LEVEL', 'debug'), // Set the log level (default to 'debug') 
         ],
     ],
 
