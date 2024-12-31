@@ -148,13 +148,14 @@ class CheckoutController extends Controller
 $i=1; 
  
         foreach ($respArray['data'] as $userdata) {
-if($services != null)
+      if($services != null)
       {
         if(!in_array($userdata['serviceID'], $services))
         {
             continue;
         }
       }
+            
             $i++; 
             $filteredArray = array_filter($service_item_array, function($item) use ($userdata) {
                 return $item['service_id'] == $userdata['serviceID'];
@@ -284,8 +285,8 @@ if($services != null)
                 $now = Carbon::now();
                 $perams = ["EmailAddress" => $email, "UniqueLink" => url('login/' . $encryptedData),"ExpireIn"=> env("SUBSCRIPTION_EXPIRE_IN_DAYS"),"EndDate"=> $now->copy()->endOfDay()->addDays(env("SUBSCRIPTION_EXPIRE_IN_DAYS"))->format('F j, Y')];
           
-                // $response =  Http::post(env('urlToSendUniqueLink'),  $perams  );
-                if (isset($response) && $response->successful()) {
+                $response =  Http::post(env('urlToSendUniqueLink'),  $perams  );
+                if ( $response->successful()) {
                      Quicklinks::updateOrCreate(
                         [
                             'customer_id' => $userid,
