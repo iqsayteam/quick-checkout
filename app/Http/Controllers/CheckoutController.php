@@ -308,7 +308,7 @@ $i=1;
                     $url[] = url('login/' . $encryptedData);
                 }
                 
-               
+                
             } 
         }
 

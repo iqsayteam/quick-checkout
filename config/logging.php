@@ -117,7 +117,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
         'LogServices' => [
-            'driver' => 'daily', // Use 'daily' for separate log files per day
+            'driver' => 'single', // Use 'daily' for separate log files per day
             'path' => storage_path('logs/LogServices.log'), // Path for the log file
             'level' => env('LOG_LEVEL', 'debug'), // Set the log level (default to 'debug') 
         ],
